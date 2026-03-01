@@ -79,3 +79,10 @@ No central authority required.
              │  Agent #5   │
              └─────────────┘
 
+Legend:
+
+Each box = independent Vertex agent
+
+Arrows = bi-directional peer-to-peer communication
+
+Agents exchange state, coordinate tasks, and reassign roles on failure
