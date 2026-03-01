@@ -1,52 +1,38 @@
+// src/agent.js — универсальный для всех серверов
+
 import { createLibp2p } from 'libp2p'
 import { tcp } from '@libp2p/tcp'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { noise } from '@chainsafe/libp2p-noise'
 import { mdns } from '@libp2p/mdns'
-import { bootstrap } from '@libp2p/bootstrap'
 
 const peers = new Map()
-let leaderId = null
+
+// Используем порт из переменной окружения или 4001 по умолчанию
+const PORT = process.env.VERTEX_PORT || 4001
 
 async function startNode() {
   const node = await createLibp2p({
-    addresses: { listen: ['/ip4/0.0.0.0/tcp/4001'] },
+    addresses: { listen: [`/ip4/0.0.0.0/tcp/${PORT}`] },
     transports: [tcp()],
     streamMuxers: [yamux()],
     connectionEncryption: [noise()],
-    peerDiscovery: [
-      mdns(),
-      bootstrap({
-        list: [
-          '/ip4/212.113.107.0/tcp/4001',
-          '/ip4/77.239.125.37/tcp/4001',
-          '/ip4/77.239.125.233/tcp/4001'
-        ]
-      })
-    ]
+    peerDiscovery: [mdns()]
   })
 
   await node.start()
-  console.log('\n=== VERTEX SWARM AGENT ===')
-  console.log('PeerId:', node.peerId.toString())
-  
-  const myPeerId = node.peerId.toString()
-  
+  console.log('\n=== ВЕРТЕКС АГЕНТ ЗАПУЩЕН ===')
+  console.log('Мой PeerId:', node.peerId.toString())
+  console.log('Слушаю порт:', PORT)
+
+  node.addEventListener('peer:discovery', (evt) => {
+    console.log('🔍 Найден пир:', evt.detail.id.toString())
+  })
+
   node.addEventListener('peer:connect', (evt) => {
     const peerId = evt.detail.remotePeer.toString()
-    peers.set(peerId, Date.now())
-    console.log('✅ Peer connected:', peerId)
+    console.log('✅ Подключился пир:', peerId)
   })
-
-  node.addEventListener('peer:disconnect', (evt) => {
-    const peerId = evt.detail.remotePeer.toString()
-    peers.delete(peerId)
-    console.log('🔌 Peer disconnected:', peerId)
-  })
-
-  setInterval(() => {
-    console.log('Active peers:', peers.size + 1)
-  }, 10000)
 }
 
 startNode().catch(console.error)
