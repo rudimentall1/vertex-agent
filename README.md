@@ -1,5 +1,4 @@
 # Vertex Agent for Swarm Challenge
-# Vertex Agent for Swarm Challenge
 
 ## 🚀 Killer Pitch
 
@@ -46,3 +45,37 @@ No central authority required.
 - Clean modular architecture  
 - Ready for integration with Gazebo/Webots  
 - Production-ready Docker support
+
+---
+
+## 🖼 ASCII Architecture Diagram
+
+             ┌─────────────┐
+             │  Vertex     │
+             │  Agent #1   │
+             └─────┬───────┘
+                   │ p2p
+                   ▼
+             ┌─────────────┐
+             │  Vertex     │
+             │  Agent #2   │
+             └─────┬───────┘
+                   │ p2p
+                   ▼
+             ┌─────────────┐
+             │  Vertex     │
+             │  Agent #3   │
+             └─────┬───────┘
+                   │ p2p
+                   ▼
+             ┌─────────────┐
+             │  Vertex     │
+             │  Agent #4   │
+             └─────┬───────┘
+                   │ p2p
+                   ▼
+             ┌─────────────┐
+             │  Vertex     │
+             │  Agent #5   │
+             └─────────────┘
+
